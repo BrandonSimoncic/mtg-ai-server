@@ -1,4 +1,5 @@
 use mtg_ai_server::ThreadPool;
+use mtg_ai_server::testing;
 use std::{
     fs,
     io::{prelude::*, BufReader},
@@ -6,7 +7,8 @@ use std::{
     thread,
     time::Duration,
 };
-fn main() {
+#[warn(dead_code)]
+fn main_2() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
     let pool = ThreadPool::new(4);
 
@@ -19,7 +21,7 @@ fn main() {
     }
     println!("Shutting Down.");
 }
-
+#[warn(dead_code)]
 fn handle_connection(mut stream: TcpStream) {
     let buf_reader = BufReader::new(&stream);
     let request_line = buf_reader.lines().next().unwrap().unwrap();
@@ -40,4 +42,10 @@ fn handle_connection(mut stream: TcpStream) {
         format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
 
     stream.write_all(response.as_bytes()).unwrap();
+}
+
+#[tokio::main]
+async fn main(){
+    testing().await;
+    // println!("{text}")
 }
