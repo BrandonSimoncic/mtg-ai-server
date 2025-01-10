@@ -50,7 +50,6 @@ impl Card{
     }
 }
 
-
 fn find_cards_in_query(query: &str) -> Vec<String> {
     let re = Regex::new(r"\[([^\]]*)\]").unwrap();
     let mut cards: Vec<String> = Vec::new();
@@ -61,7 +60,9 @@ fn find_cards_in_query(query: &str) -> Vec<String> {
     cards
 }
 fn clean_card(s: String) -> String{
-    s.replace(" ", "+").replace("[", "").replace("]", "")
+    s.replace(" ", "+")
+    .replace("[", "")
+    .replace("]", "")
 }
 
 async fn get_scryfall_card(card_name: &str) -> Result<Card, Error> {
@@ -107,10 +108,6 @@ async fn get_ruling_uri(url: &str) -> Result<Vec<String>, Error> {
     Ok(comments)
 }
 
-/////////////////////////////////////////////////////////////////////////////////// End Of Scryfall API
-/// Start of AI Code
-// use reqwest::header::Authorization;
-
 async fn get_openrouter_key()-> String{
     dotenv().ok();
     let api_key = env::var("OPENROUTER_API");
@@ -134,10 +131,10 @@ pub async fn get_askugin_key()-> String{
 
 
 async fn clean_ugin_answer(answer: String) -> String{
-    let answer = answer.replace("\\n\\n", "  \\n");
-    let answer = answer.replace("\\n", "  \\n");
-    let answer  = answer.replace("\\\\n", "  \\n");
-    answer
+    answer.replace("\\n\\n", "  \\n")
+        .replace("\\n", "  \\n")
+        .replace("\\\\n", "  \\n")
+    
 }
 
 async fn get_ai_ruling(query: &str) ->Result<String, Error>{
@@ -147,7 +144,7 @@ async fn get_ai_ruling(query: &str) ->Result<String, Error>{
     let site_url = "askugin.com";
     let site_name = "Ask Ugin";
     let body = json!({
-        "model": "meta-llama/llama-3.2-3b-instruct:free",
+        "model": "meta-llama/llama-3.1-405b-instruct:free",
         "messages": [
             {
                 "role": "user",
