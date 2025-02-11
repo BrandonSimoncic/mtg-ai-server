@@ -4,6 +4,7 @@ use reqwest::Error;
 use reqwest::header::USER_AGENT;
 use serde_json::json;
 use std::env;
+use std::str::pattern::Pattern;
 use dotenv::dotenv;
 struct Card {
     mtgo_id: String,
@@ -185,7 +186,9 @@ fn construct_query(query: &str, name_of_cards: &str , cards: &str) -> String{
     Be clear, concise, and ensure your explanation aligns with the rules of Magic: The Gathering. 
     Assume the user has a basic understanding of the game mechanics but may not grasp complex rulings.
     Do not reference cards outside of the question. Do not make examples that are outside of the given cards.
-    Please only respond in plain text format",
+    Please only respond in plain text format
+    Please only place your context within the <think> tags.
+    ",
     name_of_cards, 
     query, 
     cards);
@@ -233,5 +236,8 @@ pub async fn ask_ugin(query: &str) -> (String, String) {
     
     let answer = judge_one.unwrap();
 
-    (answer.to_string(), card_dump)
+    let pattern = Regex::new(r"/[`\s]*[\[\<]think[\>\]](.*?)[\[\<]\/think[\>\]][`\s]*|^[`\s]*([\[\<]thinking[\>\]][`\s]*.*)$/ims").unwrap();
+    let caught_answer = pattern.captures(&answer).unwrap(); 
+    let answer_cleaned = caught_answer.get(1).map_or("", |m| m.as_str());
+    (answer_cleaned.to_string(), card_dump)
 }
