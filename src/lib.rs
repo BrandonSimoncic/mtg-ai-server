@@ -4,7 +4,6 @@ use reqwest::Error;
 use reqwest::header::USER_AGENT;
 use serde_json::json;
 use std::env;
-use std::str::pattern::Pattern;
 use dotenv::dotenv;
 struct Card {
     mtgo_id: String,
@@ -236,8 +235,8 @@ pub async fn ask_ugin(query: &str) -> (String, String) {
     
     let answer = judge_one.unwrap();
 
-    let pattern = Regex::new(r"/[`\s]*[\[\<]think[\>\]](.*?)[\[\<]\/think[\>\]][`\s]*|^[`\s]*([\[\<]thinking[\>\]][`\s]*.*)$/ims").unwrap();
-    let caught_answer = pattern.captures(&answer).unwrap(); 
+    let pat = Regex::new(r"/[`\s]*[\[\<]think[\>\]](.*?)[\[\<]\/think[\>\]][`\s]*|^[`\s]*([\[\<]thinking[\>\]][`\s]*.*)$/ims").unwrap();
+    let caught_answer = pat.captures(&answer).unwrap(); 
     let answer_cleaned = caught_answer.get(1).map_or("", |m| m.as_str());
     (answer_cleaned.to_string(), card_dump)
 }
