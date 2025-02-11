@@ -144,7 +144,7 @@ async fn get_ai_ruling(query: &str) ->Result<String, Error>{
     let site_url = "askugin.com";
     let site_name = "Ask Ugin";
     let body = json!({
-        "model": "meta-llama/llama-3.1-405b-instruct:free",
+        "model": "deepseek/deepseek-r1-distill-llama-70b:free",
         "messages": [
             {
                 "role": "user",
