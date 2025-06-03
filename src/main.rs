@@ -8,6 +8,6 @@ mod formats;
 async fn main() {
 
     let routes = routes::routes();
-    println!("Server started at 0.0.0.0 10000");
-    warp::serve(routes).run(([0, 0, 0, 0], 10000)).await;
+    println!("Server started at 0.0.0.0 8080");
+    warp::serve(routes).run(([0, 0, 0, 0], 8080)).await;
 }
