@@ -24,8 +24,8 @@ pub async fn get_post(
         let post = Post {
             id,
             title: String::from("Hello, The Server!"),
-            answer: String::from("Ligma"),
-            cards: String::from("Balls"),
+            answer: String::from("Waiting for Ugin..."),
+            cards: String::from("Waiting for Ugin..."),
         };
         Ok(warp::reply::json(&post))
     }
