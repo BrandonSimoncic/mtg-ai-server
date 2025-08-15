@@ -144,7 +144,7 @@ async fn get_ai_ruling(query: &str) ->Result<String, Error>{
     let site_url = "askugin.com";
     let site_name = "Ask Ugin";
     let body = json!({
-        "model": "deepseek/deepseek-r1-distill-llama-70b:free",
+        "model": "moonshotai/kimi-k2:free",
         "messages": [
             {
                 "role": "user",
