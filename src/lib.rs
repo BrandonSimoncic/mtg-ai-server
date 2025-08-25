@@ -68,13 +68,14 @@ fn clean_card(s: String) -> String{
 async fn get_scryfall_card(card_name: &str) -> Result<Card, Error> {
     let url = format!("https://api.scryfall.com/cards/named?fuzzy={}", card_name);
     
-    let client = reqwest::Client::new();
+    let client = reqwest::Client::builder()
+        .use_rustls_tls()
+        .build()?;
     let response = client
         .get(&url)
         .header(USER_AGENT, "AskUgin.com/1.0")
         .send()
-        .await
-        .unwrap();
+        .await?;
     let json: serde_json::Value = response.json().await?;
 
     let card = Card::new(json).await;
@@ -88,13 +89,14 @@ async fn get_ruling_uri(url: &str) -> Result<Vec<String>, Error> {
     let caps = re.captures(url).unwrap();
     let extracted_url = caps.get(1).map_or("", |m| m.as_str());
     
-    let client = reqwest::Client::new();
+    let client = reqwest::Client::builder()
+        .use_rustls_tls()
+        .build()?;
     let response = client
         .get(extracted_url)
         .header(USER_AGENT, "AskUgin.com Dev")
         .send()
-        .await
-        .unwrap();
+        .await?;
     let json: serde_json::Value = response.json().await?;
 
     let mut comments = Vec::new();
@@ -138,7 +140,9 @@ async fn clean_ugin_answer(answer: String) -> String{
 }
 
 async fn get_ai_ruling(query: &str) ->Result<String, Error>{
-    let client = reqwest::Client::new();
+    let client = reqwest::Client::builder()
+        .use_rustls_tls()
+        .build()?;
     let url = "https://openrouter.ai/api/v1/chat/completions";
     let api_key = get_openrouter_key().await;
     let site_url = "askugin.com";
