@@ -71,7 +71,7 @@ async fn get_scryfall_card(card_name: &str) -> Result<Card, Error> {
     let client = reqwest::Client::new();
     let response = client
         .get(&url)
-        .header(USER_AGENT, "AskUgin.com Dev")
+        .header(USER_AGENT, "AskUgin.com/1.0")
         .send()
         .await
         .unwrap();
