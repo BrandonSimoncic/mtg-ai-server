@@ -94,7 +94,7 @@ async fn get_ruling_uri(url: &str) -> Result<Vec<String>, Error> {
         .build()?;
     let response = client
         .get(extracted_url)
-        .header(USER_AGENT, "AskUgin.com Dev")
+        .header(USER_AGENT, "AskUgin.com/1.0")
         .send()
         .await?;
     let json: serde_json::Value = response.json().await?;
@@ -239,10 +239,10 @@ pub async fn ask_ugin(query: &str) -> (String, String) {
     
     let answer = judge_one.unwrap();
 
-    // let pat = Regex::new(r"/[`\s]*[\[\<]think[\>\]](.*?)[\[\<]\/think[\>\]][`\s]*|^[`\s]*([\[\<]thinking[\>\]][`\s]*.*)$/ims").unwrap();
-    // let caught_answer = pat.captures(&answer).unwrap(); 
-    // let answer_cleaned = caught_answer.get(1).map_or("", |m| m.as_str());
-    (answer.to_string(), card_dump)
+    let pat = Regex::new(r"/[`\s]*[\[\<]think[\>\]](.*?)[\[\<]\/think[\>\]][`\s]*|^[`\s]*([\[\<]thinking[\>\]][`\s]*.*)$/ims").unwrap();
+    let caught_answer = pat.captures(&answer).unwrap(); 
+    let answer_cleaned = caught_answer.get(1).map_or("", |m| m.as_str());
+    (answer_cleaned.to_string(), card_dump)
 }
 
 //how does [urza's saga] work when [blood moon] is played?
