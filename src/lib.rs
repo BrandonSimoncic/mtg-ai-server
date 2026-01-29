@@ -148,7 +148,7 @@ async fn get_ai_ruling(query: &str) ->Result<String, Error>{
     let site_url = "askugin.com";
     let site_name = "Ask Ugin";
     let body = json!({
-        "model": "moonshotai/kimi-k2:free",
+        "model": "nvidia/nemotron-3-nano-30b-a3b:free",
         "messages": [
             {
                 "role": "user",
