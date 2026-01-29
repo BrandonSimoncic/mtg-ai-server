@@ -229,7 +229,6 @@ pub async fn ask_ugin(query: &str) -> (String, String) {
         else {
             println!("We got got.")
         }
-
     }
     let query = construct_query(query, &name_of_cards, &card_dump);
     let judge_one = get_ai_ruling(&query).await;
