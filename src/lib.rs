@@ -238,7 +238,7 @@ pub async fn ask_ugin(query: &str) -> (String, String) {
     
     let answer = judge_one.unwrap();
 
-    let pat = Regex::new(r"/[`\s]*[\[\<]think[\>\]](.*?)[\[\<]\/think[\>\]][`\s]*|^[`\s]*([\[\<]thinking[\>\]][`\s]*.*)$/ims").unwrap();
+    let pat = Regex::new(r"(?ims)[`\s]*[\[<]think[>\]]](.*?)[\[<]/think[>\]]][`\s]*|^[`\s]*([\[<]thinking[>\]]][`\s]*.*)$").unwrap();
     let caught_answer = pat.captures(&answer).unwrap(); 
     let answer_cleaned = caught_answer.get(1).map_or("", |m| m.as_str());
     (answer_cleaned.to_string(), card_dump)
