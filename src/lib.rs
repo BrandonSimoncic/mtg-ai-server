@@ -239,9 +239,12 @@ pub async fn ask_ugin(query: &str) -> (String, String) {
     let answer = judge_one.unwrap();
 
     let pat = Regex::new(r"(?ims)[`\s]*[\[<]think[>\]]](.*?)[\[<]/think[>\]]][`\s]*|^[`\s]*([\[<]thinking[>\]]][`\s]*.*)$").unwrap();
-    let caught_answer = pat.captures(&answer).unwrap(); 
-    let answer_cleaned = caught_answer.get(1).map_or("", |m| m.as_str());
-    (answer_cleaned.to_string(), card_dump)
+    let answer_cleaned = pat
+        .captures(&answer)
+        .and_then(|cap| cap.get(1).or_else(|| cap.get(2)))
+        .map(|m| m.as_str().to_string())
+        .unwrap_or(answer);
+    (answer_cleaned, card_dump)
 }
 
 //how does [urza's saga] work when [blood moon] is played?
