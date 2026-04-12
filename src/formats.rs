@@ -6,7 +6,7 @@ use serde_derive::Serialize;
 pub struct Post {
     pub id: String,
     pub title: String,
+    pub short_answer: String,
     pub answer: String,
     pub cards: String,
-
 }

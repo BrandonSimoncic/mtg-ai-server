@@ -10,20 +10,21 @@ pub async fn get_post(
     referer: String,
     title: String,
     query_params: HashMap<String, String>,) -> Result<impl warp::Reply, warp::Rejection> {
-    if authorization == get_askugin_key().await {
-        let (answer, cards) = ask_ugin(&query_params["question"].to_string()).await;
+    if authorization == get_askugin_key() {
+        let (short_answer, answer, cards) = ask_ugin(&query_params["question"].to_string()).await;
         let post = Post {
             id,
             title: String::from("Hello, The Server!"),
-            answer: answer,
-            cards: cards,
+            short_answer,
+            answer,
+            cards,
         };
         Ok(warp::reply::json(&post))
-}else {
-        
+    } else {
         let post = Post {
             id,
             title: String::from("Hello, The Server!"),
+            short_answer: String::from("Waiting for Ugin..."),
             answer: String::from("Waiting for Ugin..."),
             cards: String::from("Waiting for Ugin..."),
         };
