@@ -16,13 +16,12 @@ struct Card {
 
 impl Card{
     async fn new(card_info: serde_json::Value)->Card{
-        let mtgo_id = card_info["mtgo_id"].to_string();
-        let name = card_info["name"].to_string();
-        let type_line = card_info["type_line"].to_string();
-        let oracle_text = card_info["oracle_text"].to_string();
+        let mtgo_id = card_info["mtgo_id"].as_str().unwrap_or("").to_string();
+        let name = card_info["name"].as_str().unwrap_or("").to_string();
+        let type_line = card_info["type_line"].as_str().unwrap_or("").to_string();
+        let oracle_text = card_info["oracle_text"].as_str().unwrap_or("").to_string();
         let cmc = card_info["cmc"].to_string();
-        let rulings = get_ruling_uri(&card_info["rulings_uri"]
-        .to_string())
+        let rulings = get_ruling_uri(card_info["rulings_uri"].as_str().unwrap_or(""))
         .await
         .unwrap();
 
@@ -84,16 +83,11 @@ async fn get_scryfall_card(card_name: &str) -> Result<Card, Error> {
 }
 
 async fn get_ruling_uri(url: &str) -> Result<Vec<String>, Error> {
-    // let url = format!(&url);
-    let re = Regex::new(r#""(https://api\.scryfall\.com/cards/[a-z0-9-]+/rulings)""#).unwrap();
-    let caps = re.captures(url).unwrap();
-    let extracted_url = caps.get(1).map_or("", |m| m.as_str());
-    
     let client = reqwest::Client::builder()
         .use_rustls_tls()
         .build()?;
     let response = client
-        .get(extracted_url)
+        .get(url)
         .header(USER_AGENT, "AskUgin.com/1.0")
         .send()
         .await?;
@@ -166,7 +160,7 @@ async fn get_ai_ruling(query: &str) ->Result<String, Error>{
         .send()
         .await?;
     let json: serde_json::Value = response.json().await?;
-    let answer = json["choices"][0]["message"]["content"].to_string();
+    let answer = json["choices"][0]["message"]["content"].as_str().unwrap_or("").to_string();
     let answer = clean_ugin_answer(answer).await;
 
     Ok(answer)
